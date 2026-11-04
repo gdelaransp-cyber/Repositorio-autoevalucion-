@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Autoevaluación Competencias Ciudadanas y Filosofía Grado 11 – 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8F3F7; --surface:#FFFFFF; --ink:#12355B; --muted:#4A6582;
+  --sea:#1F9E92; --sea-soft:#D3EFEC; --sun:#F5BE3A; --sun-soft:#FDF0CC;
+  --line:#C4DCE6; --lock:#9FB4C4; --shadow:0 3px 0 #C4DCE6;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D2236; --surface:#15314C; --ink:#EAF3F8; --muted:#A9C2D6;
+    --sea:#3CC4B6; --sea-soft:#174845; --sun:#F7C94F; --sun-soft:#4A3D17;
+    --line:#24486A; --lock:#4E6B85; --shadow:0 3px 0 #0A1A2A; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D2236; --surface:#15314C; --ink:#EAF3F8; --muted:#A9C2D6;
+  --sea:#3CC4B6; --sea-soft:#174845; --sun:#F7C94F; --sun-soft:#4A3D17;
+  --line:#24486A; --lock:#4E6B85; --shadow:0 3px 0 #0A1A2A; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:1.0625rem;line-height:1.55}
+h1,h2,h3,.display{font-family:"Fredoka","Trebuchet MS",Arial,sans-serif;line-height:1.15;margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:1.25rem 1rem 3rem}
+button{font:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+/* barra superior */
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:.75rem 0 .5rem;border-bottom:2px solid var(--line);margin-bottom:1.25rem}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.hud-row{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.hud-title{font-family:"Fredoka",sans-serif;font-weight:600;font-size:1rem}
+.xp{font-family:"Fredoka",sans-serif;font-weight:700;background:var(--sun);color:#12355B;padding:.2rem .7rem;border-radius:999px;white-space:nowrap}
+.bar{height:12px;background:var(--surface);border:2px solid var(--line);border-radius:999px;overflow:hidden;margin-top:.55rem}
+.bar span{display:block;height:100%;width:0;background:var(--sea);transition:width .4s ease}
+
+/* mapa de estaciones */
+.map{display:flex;align-items:center;margin:.25rem 0 1.5rem;overflow-x:auto;padding:.25rem}
+.stop{display:flex;flex-direction:column;align-items:center;gap:.3rem;min-width:62px;text-align:center}
+.dot{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:"Fredoka",sans-serif;font-weight:700;font-size:1.1rem;border:3px solid var(--lock);color:var(--lock);background:var(--surface)}
+.stop small{font-size:.72rem;color:var(--muted);line-height:1.2}
+.stop.current .dot{border-color:var(--sun);color:var(--ink);background:var(--sun-soft)}
+.stop.done .dot{border-color:var(--sea);background:var(--sea);color:#fff}
+.path{flex:1;min-width:14px;height:4px;background:var(--line);border-radius:2px;margin-bottom:1.4rem}
+.path.done{background:var(--sea)}
+
+/* tarjetas */
+.card{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:1.4rem 1.25rem;box-shadow:var(--shadow)}
+.intro h1{font-size:clamp(1.6rem,5vw,2.3rem);margin-bottom:1rem}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;margin:0 0 1.25rem;padding:0}
+.meta dt{color:var(--muted)}
+.meta dd{margin:0;font-weight:700}
+.meta input{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:.3rem .5rem}
+.scale{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 0;padding:0;list-style:none}
+.scale li{background:var(--sea-soft);border-radius:10px;padding:.25rem .6rem;font-size:.92rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;border:0;border-radius:14px;padding:.8rem 1.4rem;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.1rem;background:var(--sea);color:#fff;box-shadow:0 4px 0 #13685F}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #13685F}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:none;border:2px solid var(--line)}
+.actions{display:flex;justify-content:space-between;gap:.75rem;margin-top:1.4rem;flex-wrap:wrap}
+
+.level-tag{font-family:"Fredoka",sans-serif;font-weight:600;color:var(--sea);font-size:1rem;margin-bottom:.35rem}
+.q-num{display:inline-grid;place-items:center;min-width:2.2rem;height:2.2rem;border-radius:10px;background:var(--sun);color:#12355B;font-family:"Fredoka",sans-serif;font-weight:700;margin-bottom:.8rem}
+.q-text{font-size:1.25rem;font-weight:700;margin:0 0 1.2rem}
+.opts{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem}
+.opt{border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:.7rem .25rem;display:flex;flex-direction:column;align-items:center;gap:.2rem}
+.opt b{font-family:"Fredoka",sans-serif;font-size:1.5rem}
+.opt span{font-size:.78rem;line-height:1.15;color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--sea);background:var(--sea);color:#fff}
+.opt[aria-pressed="true"] span{color:#fff}
+textarea{width:100%;min-height:140px;font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:.8rem;resize:vertical}
+.hint{color:var(--muted);font-size:.9rem;margin:.5rem 0 0}
+
+/* insignia */
+.overlay{position:fixed;inset:0;background:rgba(8,24,40,.6);display:none;place-items:center;padding:1rem;z-index:20}
+.overlay.show{display:grid}
+.badge-card{background:var(--surface);border-radius:22px;padding:1.8rem 1.4rem;text-align:center;max-width:380px;width:100%;border:3px solid var(--sun);animation:pop .45s ease}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.badge-card{animation:none}.bar span{transition:none}}
+.medal{width:96px;height:96px;margin:0 auto 1rem}
+.badge-card h2{font-size:1.6rem;margin-bottom:.4rem}
+.badge-card p{margin:.2rem 0 1.2rem;color:var(--muted)}
+
+/* final */
+.badges{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin:1rem 0 1.5rem}
+.mini{display:flex;flex-direction:column;align-items:center;width:104px;text-align:center;font-size:.85rem;gap:.3rem}
+.mini svg{width:58px;height:58px}
+.summary{margin-top:1.5rem}
+.summary h3{font-size:1.15rem;margin:1.2rem 0 .5rem;color:var(--sea)}
+.summary ol{margin:0;padding-left:1.4rem}
+.summary li{margin-bottom:.45rem}
+.summary .ans{font-weight:700}
+.thanks{font-style:italic;text-align:center;margin-top:1.5rem}
+@media (max-width:480px){.opt span{font-size:.68rem}.opt b{font-size:1.3rem}}
+@media print{.hud,.actions,.overlay{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hud" id="hud" hidden>
+    <div class="hud-row">
+      <span class="hud-title" id="hudTitle">Misión</span>
+      <span class="xp" id="xp">0 XP</span>
+    </div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="21" aria-valuenow="0" id="bar"><span id="barFill"></span></div>
+  </header>
+
+  <nav class="map" id="map" aria-label="Estaciones de la misión"></nav>
+  <main id="screen"></main>
+</div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="badgeTitle">
+  <div class="badge-card">
+    <div class="medal" id="medal"></div>
+    <h2 id="badgeTitle"></h2>
+    <p id="badgeText"></p>
+    <button class="btn" id="badgeBtn">Seguir la misión</button>
+  </div>
+</div>
+
+<script>
+const SCALE=[{v:5,t:"Siempre"},{v:4,t:"Casi siempre"},{v:3,t:"A veces"},{v:2,t:"Casi nunca"},{v:1,t:"Nunca"}];
+const COMPONENTS=[
+ {name:"Componente 1: Académico",short:"Académico",type:"scale",badge:"Mente crítica",color:"#1F9E92",
+  q:["La docente domina los temas de Competencias Ciudadanas y Filosofía que enseña.",
+     "Los contenidos trabajados me ayudan a comprender mi realidad social, política y personal.",
+     "Las clases fortalecen mi pensamiento crítico y mi capacidad de argumentar.",
+     "Los temas abordados me preparan para las Pruebas Saber 11 en Sociales, Ciudadanas y Lectura Crítica.",
+     "Las evaluaciones son coherentes con lo trabajado en clase y los criterios se explican con claridad."]},
+ {name:"Componente 2: Metodología",short:"Metodología",type:"scale",badge:"Explorador del aprendizaje",color:"#2E7FC1",
+  q:["La docente explica los temas de forma clara y comprensible.",
+     "Las actividades (debates, análisis de casos, lecturas, trabajos en grupo) son variadas y motivadoras.",
+     "Se utilizan recursos digitales y materiales que facilitan mi aprendizaje.",
+     "Las clases promueven mi participación activa y el diálogo entre compañeros.",
+     "La docente organiza bien el tiempo y cumple con lo planeado para cada clase."]},
+ {name:"Componente 3: Socioemocional",short:"Socioemocional",type:"scale",badge:"Corazón ciudadano",color:"#D9534F",
+  q:["La docente me trata con respeto y amabilidad.",
+     "Me siento en confianza para expresar mis opiniones, dudas e ideas en clase.",
+     "La docente escucha y valora los diferentes puntos de vista de los estudiantes.",
+     "En las clases se promueve la convivencia, la empatía y la resolución pacífica de conflictos.",
+     "La docente se interesa por mi bienestar y me motiva a superar mis dificultades."]},
+ {name:"Componente 4: Aportes para la mejora",short:"Aportes",type:"open",badge:"Constructor de ideas",color:"#8A5CC2",
+  q:["¿Qué es lo que más te gusta de las clases de Competencias Ciudadanas y Filosofía?",
+     "¿Qué aspecto de las clases consideras que la docente debería mejorar?",
+     "¿Qué tema te gustaría trabajar o profundizar en estas asignaturas?",
+     "¿Qué actividad o estrategia te gustaría que se implementara en las clases?",
+     "¿Qué aprendizaje de estas clases crees que te servirá para tu vida después del colegio?"]},
+ {name:"Mensaje final",short:"Mensaje",type:"final",badge:"Voz que inspira",color:"#E0A21B",
+  q:["Escribe un mensaje para tu docente Grace De La Rans sobre tu experiencia en sus clases durante este año escolar."]}
+];
+// lista plana de pasos
+const STEPS=[];
+let n=0;
+COMPONENTS.forEach((c,ci)=>c.q.forEach((text,qi)=>{STEPS.push({ci,qi,text,num:c.type==="final"?null:++n,type:c.type})}));
+const XP_PER=10, KEY="autoeval11-2026";
+
+/* ===== CONEXIÓN CON GOOGLE SHEETS =====
+   Pega entre las comillas la URL de tu aplicación web de Apps Script
+   (empieza por https://script.google.com/macros/s/...) */
+const SHEET_URL="https://script.google.com/macros/s/AKfycbw5PY7IHz9gJ4g8XTFokiHRm7XGuq9haK4Z8nQS4AF1QJ-dQyxbovlA80A8m3j1MVXe1Q/exec";
+
+let state={step:-1,answers:{},fecha:"",sent:false};
+try{const s=localStorage.getItem(KEY);if(s)state=Object.assign(state,JSON.parse(s))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function answered(i){const a=state.answers[i];return a!==undefined&&String(a).trim()!==""}
+function xp(){return STEPS.reduce((t,_,i)=>t+(answered(i)?XP_PER:0),0)}
+function compDone(ci){return STEPS.every((s,i)=>s.ci!==ci||answered(i))}
+
+function medalSVG(color,label){
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">
+   <path d="M30 4h14l8 30H38z" fill="${color}" opacity=".75"/><path d="M70 4H56l-8 30h14z" fill="${color}"/>
+   <circle cx="50" cy="62" r="32" fill="#F5BE3A"/><circle cx="50" cy="62" r="25" fill="${color}"/>
+   <text x="50" y="71" text-anchor="middle" font-family="Fredoka,Arial" font-weight="700" font-size="26" fill="#fff">${label}</text></svg>`;
+}
+
+function renderMap(){
+  const cur=state.step>=0&&state.step<STEPS.length?STEPS[state.step].ci:(state.step>=STEPS.length?99:-1);
+  $("map").innerHTML=COMPONENTS.map((c,ci)=>{
+    const done=compDone(ci), cls=done?"done":(ci===cur?"current":"");
+    const mark=done?"✓":(ci+1);
+    const path=ci<COMPONENTS.length-1?`<div class="path ${done?"done":""}"></div>`:"";
+    return `<div class="stop ${cls}" aria-label="${esc(c.short)}${done?" completado":""}"><div class="dot">${mark}</div><small>${esc(c.short)}</small></div>${path}`;
+  }).join("");
+}
+function renderHud(){
+  const hud=$("hud");hud.hidden=state.step<0;
+  const done=STEPS.filter((_,i)=>answered(i)).length;
+  $("xp").textContent=xp()+" XP";
+  $("barFill").style.width=(done/STEPS.length*100)+"%";
+  $("bar").setAttribute("aria-valuenow",done);
+  $("hudTitle").textContent=state.step>=0&&state.step<STEPS.length?COMPONENTS[STEPS[state.step].ci].name:"Misión cumplida";
+}
+
+function renderIntro(){
+  $("screen").innerHTML=`<section class="card intro">
+   <h1>Autoevaluación Competencias Ciudadanas y Filosofía Grado 11 – 2026</h1>
+   <dl class="meta">
+     <dt>Institución</dt><dd>IED Marco Fidel Suárez – Barranquilla</dd>
+     <dt>Asignaturas</dt><dd>Competencias Ciudadanas y Filosofía</dd>
+     <dt>Grado</dt><dd>11°</dd>
+     <dt>Año</dt><dd>2026</dd>
+     <dt>Docente</dt><dd>Grace De La Rans</dd>
+     <dt><label for="fecha">Fecha</label></dt><dd><input type="date" id="fecha" value="${esc(state.fecha)}"></dd>
+   </dl>
+   <p><strong>Instrucciones:</strong> lee cada afirmación y marca la opción que mejor refleje tu experiencia en las clases. En los componentes 4 y 5 responde con tus propias palabras. Tus respuestas son sinceras y ayudan a mejorar el proceso de enseñanza.</p>
+   <p style="margin-bottom:.2rem"><strong>Escala de valoración:</strong></p>
+   <ul class="scale">${SCALE.map(s=>`<li>${s.v} = ${s.t}</li>`).join("")}</ul>
+   <p class="hint">Recorre las 5 estaciones, gana ${XP_PER} XP por cada respuesta y desbloquea una insignia al terminar cada componente.</p>
+   <div class="actions"><span></span><button class="btn" id="start">${Object.keys(state.answers).length?"Continuar la misión":"Comenzar la misión"}</button></div>
+  </section>`;
+  $("fecha").addEventListener("change",e=>{state.fecha=e.target.value;save()});
+  $("start").addEventListener("click",()=>{
+    let first=STEPS.findIndex((_,i)=>!answered(i));go(first<0?STEPS.length:first)});
+}
+
+function renderStep(){
+  const i=state.step,s=STEPS[i],c=COMPONENTS[s.ci];
+  const posInComp=s.qi+1,total=c.q.length;
+  let body="";
+  if(s.type==="scale"){
+    body=`<div class="opts" role="group" aria-label="Valoración">${SCALE.map(o=>
+      `<button class="opt" data-v="${o.v}" aria-pressed="${state.answers[i]==o.v}"><b>${o.v}</b><span>${o.t}</span></button>`).join("")}</div>`;
+  }else{
+    body=`<label class="sr" for="txt" style="position:absolute;left:-9999px">${s.type==="final"?"Mi mensaje":"Respuesta"}</label>
+      <textarea id="txt" placeholder="${s.type==="final"?"Mi mensaje…":"Escribe tu respuesta…"}">${esc(state.answers[i]||"")}</textarea>`;
+  }
+  const isLast=i===STEPS.length-1;
+  $("screen").innerHTML=`<section class="card">
+    <div class="level-tag">Estación ${s.ci+1} de ${COMPONENTS.length}${total>1?` · Pregunta ${posInComp} de ${total}`:""}</div>
+    ${s.num?`<div class="q-num">${s.num}</div>`:""}
+    <p class="q-text">${esc(s.text)}</p>
+    ${body}
+    <div class="actions">
+      <button class="btn ghost" id="back">Anterior</button>
+      <button class="btn" id="next" ${answered(i)?"":"disabled"}>${isLast?"Terminar misión":"Siguiente"}</button>
+    </div>
+  </section>`;
+  if(s.type==="scale"){
+    document.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+      state.answers[i]=Number(b.dataset.v);save();
+      document.querySelectorAll(".opt").forEach(x=>x.setAttribute("aria-pressed",x===b));
+      $("next").disabled=false;renderHud();renderMap();
+    }));
+  }else{
+    const t=$("txt");t.focus();
+    t.addEventListener("input",()=>{state.answers[i]=t.value;save();$("next").disabled=!answered(i);renderHud();renderMap()});
+  }
+  $("back").addEventListener("click",()=>go(i-1));
+  $("next").addEventListener("click",()=>{
+    const endsComp=i===STEPS.length-1||STEPS[i+1].ci!==s.ci;
+    if(endsComp&&compDone(s.ci)) showBadge(s.ci,()=>go(i+1)); else go(i+1);
+  });
+}
+
+function showBadge(ci,cb){
+  const c=COMPONENTS[ci];
+  $("medal").innerHTML=medalSVG(c.color,ci+1);
+  $("badgeTitle").textContent="¡Insignia desbloqueada!";
+  $("badgeText").innerHTML=`<strong>${esc(c.badge)}</strong><br>Completaste ${esc(c.name)} · ${xp()} XP acumulados`;
+  $("overlay").classList.add("show");
+  const btn=$("badgeBtn");btn.textContent=ci===COMPONENTS.length-1?"Ver mis resultados":"Seguir la misión";btn.focus();
+  btn.onclick=()=>{$("overlay").classList.remove("show");cb()};
+}
+
+function renderFinal(){
+  const sections=COMPONENTS.map((c,ci)=>{
+    const items=STEPS.map((s,i)=>({s,i})).filter(o=>o.s.ci===ci).map(({s,i})=>{
+      const a=state.answers[i];
+      const val=s.type==="scale"?`${a} – ${SCALE.find(x=>x.v==a)?.t||""}`:esc(a||"");
+      return `<li>${s.num?`<strong>${s.num}.</strong> `:""}${esc(s.text)}<br><span class="ans">${val}</span></li>`;
+    }).join("");
+    return `<h3>${esc(c.name)}</h3><ol style="list-style:none;padding-left:0">${items}</ol>`;
+  }).join("");
+  $("screen").innerHTML=`<section class="card">
+    <h1 style="font-size:clamp(1.6rem,5vw,2.2rem);text-align:center">¡Misión cumplida!</h1>
+    <p style="text-align:center;margin:.5rem 0 0">Obtuviste <strong>${xp()} XP</strong> y las ${COMPONENTS.length} insignias.</p>
+    <div class="badges">${COMPONENTS.map((c,ci)=>`<div class="mini">${medalSVG(c.color,ci+1)}<span>${esc(c.badge)}</span></div>`).join("")}</div>
+    <div class="summary">${sections}</div>
+    <p class="thanks">¡Gracias por tu sinceridad y por ser parte de este proceso!</p>
+    <p class="hint" id="sendStatus" role="status" style="text-align:center"></p>
+    <div class="actions">
+      <button class="btn ghost" id="review">Revisar respuestas</button>
+      <button class="btn ghost" id="reset">Empezar de nuevo</button>
+    </div>
+  </section>`;
+  $("review").addEventListener("click",()=>go(0));
+  $("reset").addEventListener("click",()=>{if(confirm("¿Borrar todas las respuestas y empezar de nuevo?")){state={step:-1,answers:{},fecha:"",sent:false};save();go(-1)}});
+  sendResults();
+}
+
+async function sendResults(){
+  const el=$("sendStatus"); if(!el) return;
+  if(state.sent){el.textContent="Tus respuestas ya fueron enviadas a la docente.";return;}
+  if(!SHEET_URL.startsWith("https://script.google.com/")){el.textContent="El envío a la docente aún no está configurado.";return;}
+  el.textContent="Enviando tus respuestas a la docente…";
+  const payload={
+    fecha:state.fecha||"",
+    respuestas:STEPS.map((s,i)=>s.type==="final"?null:(state.answers[i]??"")).filter(v=>v!==null),
+    mensaje:state.answers[STEPS.length-1]||""
+  };
+  try{
+    await fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
+    state.sent=true;save();
+    el.textContent="¡Listo! Tus respuestas fueron enviadas a la docente.";
+  }catch(e){
+    el.innerHTML='No se pudieron enviar tus respuestas. Revisa tu conexión a internet. <button class="btn ghost" id="retry" style="margin-top:.5rem">Intentar de nuevo</button>';
+    $("retry").onclick=sendResults;
+  }
+}
+
+function go(i){
+  state.step=Math.max(-1,Math.min(i,STEPS.length));save();
+  renderHud();renderMap();
+  if(state.step<0)renderIntro();else if(state.step>=STEPS.length)renderFinal();else renderStep();
+  window.scrollTo({top:0});
+}
+go(state.step);
+</script>
+</body>
+</html>
